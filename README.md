@@ -12,10 +12,10 @@ The main menu was taken from [baraltech's](https://www.youtube.com/@baraltech) [
 # **Tutorial**
 
 #### Operators
-- \+
-- \-
-- \*
-- /
+- \+: plus
+- \-: minus
+- \*: multiply
+- /: divide
 
 #### Functions
 - ln(): natural log
