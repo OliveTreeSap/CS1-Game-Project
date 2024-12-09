@@ -129,7 +129,7 @@ def incorrect_equation(screen):
         ok_button.Update(screen)
 
         #Display text warning the user
-        RenderText(screen, 350, 360-50, "You inputted an incorrect equation", "Black", 32)
+        RenderText(screen, 640, 360-50, "You inputted an incorrect equation", "Black", 32, center=True)
 
         #Update the screen
         pygame.display.update()

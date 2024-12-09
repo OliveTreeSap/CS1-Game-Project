@@ -4,6 +4,12 @@ import numpy as np
 from button import Button
 from add_screens import lose_screen, win_screen, incorrect_equation
 from add_funcs import ln, log2, log10, sin, cos, tan, sqrt, exp, RenderText
+from levels import GetLevel
+
+
+#Math constants
+pi = np.pi
+e = np.e
 
 
 #Set up pygame
@@ -20,16 +26,22 @@ base_font = pygame.font.Font("CS1\Grand9K_Pixel.ttf", 32)
 
 
 def MainMenu(screen, menu_font):
+
+    #Set the window name to Menu
     pygame.display.set_caption("Menu")
 
     while True:
+
+        #Set the background color
         screen.fill((202,228,241))
 
+        #Get the current mouse position
         mouse_pos = pygame.mouse.get_pos()
 
-        menu_text = menu_font.render("MAIN MENU", True, "black")
-        menu_rect = menu_text.get_rect(center=(640, 100))
+        #Display the main menu title/ game title
+        RenderText(screen, 640, 100, "MAIN MENU", "black", 32, center=True)
 
+        #Initialize the play, options and quit button
         play_button = Button(image=pygame.image.load("CS1\images\\pixilart-drawing.png"),
                              x_pos=640, y_pos=250, text_input="PLAY")
         
@@ -39,24 +51,27 @@ def MainMenu(screen, menu_font):
         quit_button = Button(image=pygame.image.load("CS1\images\\pixilart-drawing.png"),
                              x_pos=640, y_pos=550, text_input="QUIT")
         
-        screen.blit(menu_text, menu_rect)
-
+        #Update the visual of each button
         for button in [play_button, options_button, quit_button]:
             button.ChangeColor(mouse_pos)
             button.Update(screen)
 
+        #Event handler
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             
+            #Check if any of the three buttons is clicked
             if event.type == pygame.MOUSEBUTTONDOWN:
+                #Launch the main game
                 if play_button.CheckForInput(pygame.mouse.get_pos()):
-                    MainGameLogic()
-                    MainMenu(screen, base_font)
+                    LevelSelector(screen, menu_font)
+                #Switch to the options screen
                 if options_button.CheckForInput(pygame.mouse.get_pos()):
                     Options(screen, menu_font)
+                #Quit the game
                 if quit_button.CheckForInput(pygame.mouse.get_pos()):
                     pygame.quit()
                     sys.exit()
@@ -65,59 +80,101 @@ def MainMenu(screen, menu_font):
 
 
 def Options(screen, options_font):
+
     while True:
+
+        #Back ground color
         screen.fill((202,228,241))
 
+        #Get the current mouse position
         mouse_pos = pygame.mouse.get_pos()
 
-        options_text = options_font.render("This is the OPTIONS screen.", True, "Black")
-        options_rect = options_text.get_rect(center=(640, 260))
-        screen.blit(options_text, options_rect)
+        #Display the options screen text
+        RenderText(screen, 640, 260, "There is nothing here yet :(", "black", 32, center=True)
 
+        #Initialize the back button
         options_back = Button(image=pygame.image.load("CS1\images\\pixilart-drawing.png"), x_pos=640, y_pos=460, 
                             text_input="BACK")
 
+        #Update the visual of the back button
         options_back.ChangeColor(mouse_pos)
         options_back.Update(screen)
 
+        #Event handler
         for event in pygame.event.get():
+
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
+                #Check if the back button was clicked
                 if options_back.CheckForInput(mouse_pos):
+                    #Return to the main menu
                     MainMenu(screen, options_font)
 
         pygame.display.update()
 
+
+def LevelSelector(screen, level_select_font):
+
     while True:
+
+        #Back ground color
         screen.fill((202,228,241))
 
+        #Get the current mouse position
         mouse_pos = pygame.mouse.get_pos()
 
-        play_text = game_font.render("This is the PLAY screen.", True, "White")
-        play_rect = play_text.get_rect(center=(640, 260))
-        screen.blit(play_text, play_rect)
+        #Set up the options screen text
+        RenderText(screen, 640, 100, "Choose a level", "black", 32, center=True)
 
-        play_back = Button(image=pygame.image.load("CS1\images\\pixilart-drawing.png"), x_pos=640, y_pos=460, 
+        #Initialize the back button
+        level_select_back = Button(image=pygame.image.load("CS1\images\\pixilart-drawing.png"), x_pos=1180, y_pos=660, 
                             text_input="BACK")
 
-        play_back.ChangeColor(mouse_pos)
-        play_back.Update(screen)
+        #Update the visual of the back button
+        level_select_back.ChangeColor(mouse_pos)
+        level_select_back.Update(screen)
 
+        #list containing the level buttons
+        level_buttons = []
+
+        #Create each button for their respective levels
+        for i in range(1, 7):
+            button_image = pygame.image.load("CS1\images\\pixilart-drawing.png")
+            button_image = pygame.transform.scale(button_image, (52, 52))
+            level_buttons.append(Button(image=button_image, x_pos=182.857*i, y_pos=200, 
+                            text_input=str(i)))
+            
+        #Update the visual of each level button
+        for button in level_buttons:
+            button.ChangeColor(mouse_pos)
+            button.Update(screen)
+
+        #Event handler
         for event in pygame.event.get():
+
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if play_back.CheckForInput(mouse_pos):
-                    MainMenu(screen, game_font)
+
+                #Check if the back button was clicked
+                if level_select_back.CheckForInput(mouse_pos):
+                    #Return to the main menu
+                    MainMenu(screen, level_select_font)
+                
+                #Check if any of the level button was clicked
+                for button in level_buttons:
+                    if button.CheckForInput(mouse_pos):
+                        MainGameLogic(button.text_input)
 
         pygame.display.update()
 
 
-def MainGameLogic():
+def MainGameLogic(level):
     
     #Set up the display window
     SCREEN_HEIGHT = 720
@@ -155,10 +212,6 @@ def MainGameLogic():
     lose = False
     win = False
 
-    #Set up the target
-    target = pygame.Rect(-50, -50, 25, 25)
-    target.center = (1100, 320)
-
     #Main loop of the game
     while True:
 
@@ -170,9 +223,6 @@ def MainGameLogic():
         pygame.draw.rect(screen, "white", bottom_rect)
         pygame.draw.rect(screen, "white", left_rect)
         pygame.draw.rect(screen, "white", right_rect)
-
-        #Draw the target
-        pygame.draw.rect(screen, "red", target)
 
         #Render the text box and input text
         if inputting:
@@ -189,6 +239,17 @@ def MainGameLogic():
         #Update the state of the fire button
         fire_button.Update(screen)
         fire_button.ChangeColor(pygame.mouse.get_pos())
+
+        #Load the level
+        current_level = GetLevel(level)
+
+        #Set up and display the target
+        target = current_level[0]
+        target.UpdateObject(screen)
+
+        if len(current_level) > 1:
+            for obstacle in current_level[1:]:
+                obstacle.UpdateObject(screen)
 
         #The event handler
         for event in pygame.event.get():
@@ -242,7 +303,7 @@ def MainGameLogic():
             if current_x > 1280:
                 lose = True
 
-            #Detect the projectile's collision with the border or obstacles
+            #Check if the projectile collided with the borders
             if projectile.colliderect(top_rect):
                 lose = True
             elif projectile.colliderect(bottom_rect):
@@ -252,23 +313,29 @@ def MainGameLogic():
             elif projectile.colliderect(right_rect):
                 lose = True
 
+            #Check if the projectile collided with the obstacle(s)
+            if len(current_level) > 1:
+                for obstacle in current_level[1:]:
+                    if obstacle.CheckColision(projectile):
+                        lose = True
+
+            #Check if the projectile collided with the target
+            if target.CheckColision(projectile):
+                win = True
+
             #Display the losing screen
             if lose:
                 restart = lose_screen(screen)
                 if restart:
-                    MainGameLogic()
+                    MainGameLogic(level)
                 else:
                     pygame.quit()
                     sys.exit()
 
-            #Detect the projectile's collision with the target
-            if target.colliderect(projectile):
-                win = True
-
             #Diplay the winning screen
             if win:
                 if win_screen(screen):
-                    MainMenu(screen, base_font)
+                    LevelSelector(screen, base_font)
 
         #Set the speed of the game
         clock.tick(20000)
