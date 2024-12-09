@@ -1,12 +1,12 @@
 # **HOW TO DOWNLOAD**
 
-Click on the green code button and then click download zip.
+Click on the green code button and then click download zip.  
 After that unzip the file on your computer and then run the main.py file.
 >***MAKE SURE TO HAVE PYTHON DOWNLOADED.***
 
 # **Credits**
 
-This game was heavily inspired by [Graphwar](https://www.graphwar.com/) by [catabriga](https://github.com/catabriga).
+This game was heavily inspired by [Graphwar](https://www.graphwar.com/) by [catabriga](https://github.com/catabriga).  
 The main menu was taken from [baraltech's](https://www.youtube.com/@baraltech) [video](https://www.youtube.com/watch?v=GMBqjxcKogA).
 
 # **Tutorial**
