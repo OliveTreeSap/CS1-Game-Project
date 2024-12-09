@@ -1,23 +1,23 @@
-#**HOW TO DOWNLOAD**
+# **HOW TO DOWNLOAD**
 
 Click on the green code button and then click download zip.
 After that unzip the file on your computer and then run the main.py file.
 >***MAKE SURE TO HAVE PYTHON DOWNLOADED.***
 
-#**Credits**
+# **Credits**
 
 This game was heavily inspired by [Graphwar](https://www.graphwar.com/) by [catabriga](https://github.com/catabriga).
 The main menu was taken from [baraltech's](https://www.youtube.com/@baraltech) [video](https://www.youtube.com/watch?v=GMBqjxcKogA).
 
-#**Tutorial**
+# **Tutorial**
 
-####Operators
-- +
-- -
-- *
+#### Operators
+- \+
+- \-
+- \*
 - /
 
-####Functions
+#### Functions
 - ln(): natural log
 - log2(): log to base 2
 - log10(): log to base 10
