@@ -7,7 +7,10 @@ After that unzip the file on your computer and then run the main.py file.
 # **Credits**
 
 This game was heavily inspired by [Graphwar](https://www.graphwar.com/) by [catabriga](https://github.com/catabriga).  
-The main menu was taken from [baraltech's](https://www.youtube.com/@baraltech) [video](https://www.youtube.com/watch?v=GMBqjxcKogA).
+The music of the game was downloaded from [FesliyanStudios's](https://www.youtube.com/@FesliyanStudios) [website](https://www.fesliyanstudios.com/).  
+The main menu was taken from [baraltech's](https://www.youtube.com/@baraltech) [video](https://www.youtube.com/watch?v=GMBqjxcKogA).  
+The buttons' sound effects was taken from [Monkeytype](https://monkeytype.com/).  
+The text input is a slightly modified version of [Clear Code's](https://www.youtube.com/@ClearCode) [video](https://www.youtube.com/watch?v=Rvcyf4HsWiw).
 
 # **Tutorial**
 

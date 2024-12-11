@@ -30,6 +30,10 @@ def lose_screen(screen):
 
         for event in pygame.event.get():
 
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
             #Check if the user clicked the restart or quit button
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if restart_button.CheckForInput(pygame.mouse.get_pos()):
@@ -134,3 +138,57 @@ def incorrect_equation(screen):
         #Update the screen
         pygame.display.update()
 
+
+def pause_screen(screen):
+
+    run = True
+    #Return the user actions
+    resume = False
+
+    #Set up the pause screen
+    pause_screen = pygame.Rect(-1000, -1000, 640, 360)
+    pause_screen.center = (640, 360)
+
+    #Set up the resume and quit button
+    resume_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640-25, y_pos=360, text_input="R")
+    quit_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640+25, y_pos=360, text_input="Q")
+
+    #blur the background
+    blur = pygame.image.load("images\\transparent_background.png").convert_alpha()
+    screen.blit(blur, (0, 0))
+
+    while run:
+
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            #Check if the user clicked the resume or quit button
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if resume_button.CheckForInput(pygame.mouse.get_pos()):
+                    resume = True
+                    run = False
+                elif quit_button.CheckForInput(pygame.mouse.get_pos()):
+                    resume = False
+                    run = False
+            
+            #Check if the user pressed the esc key
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    resume = True
+                    run = False
+
+        #Display the pause screen
+        pygame.draw.rect(surface=screen, color="white", rect=pause_screen)
+        
+        #Update the resume and quit button
+        for button in [resume_button, quit_button]:
+            button.ChangeColor(pygame.mouse.get_pos())
+            button.Update(screen)
+
+        #Update the screen
+        pygame.display.update()
+
+    return resume
