@@ -22,7 +22,7 @@ SCREEN_WIDTH = 1280
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 #Load the default font
-base_font = pygame.font.Font("CS1\Grand9K_Pixel.ttf", 32)
+base_font = pygame.font.Font("Grand9K_Pixel.ttf", 32)
 
 
 def MainMenu(screen, menu_font):
@@ -42,13 +42,13 @@ def MainMenu(screen, menu_font):
         RenderText(screen, 640, 100, "MAIN MENU", "black", 32, center=True)
 
         #Initialize the play, options and quit button
-        play_button = Button(image=pygame.image.load("CS1\images\\pixilart-drawing.png"),
+        play_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"),
                              x_pos=640, y_pos=250, text_input="PLAY")
         
-        options_button = Button(image=pygame.image.load("CS1\images\\pixilart-drawing.png"),
+        options_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"),
                              x_pos=640, y_pos=400, text_input="OPTIONS")
         
-        quit_button = Button(image=pygame.image.load("CS1\images\\pixilart-drawing.png"),
+        quit_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"),
                              x_pos=640, y_pos=550, text_input="QUIT")
         
         #Update the visual of each button
@@ -93,7 +93,7 @@ def Options(screen, options_font):
         RenderText(screen, 640, 260, "There is nothing here yet :(", "black", 32, center=True)
 
         #Initialize the back button
-        options_back = Button(image=pygame.image.load("CS1\images\\pixilart-drawing.png"), x_pos=640, y_pos=460, 
+        options_back = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=460, 
                             text_input="BACK")
 
         #Update the visual of the back button
@@ -130,7 +130,7 @@ def LevelSelector(screen, level_select_font):
         RenderText(screen, 640, 100, "Choose a level", "black", 32, center=True)
 
         #Initialize the back button
-        level_select_back = Button(image=pygame.image.load("CS1\images\\pixilart-drawing.png"), x_pos=1180, y_pos=660, 
+        level_select_back = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=1180, y_pos=660, 
                             text_input="BACK")
 
         #Update the visual of the back button
@@ -142,7 +142,7 @@ def LevelSelector(screen, level_select_font):
 
         #Create each button for their respective levels
         for i in range(1, 7):
-            button_image = pygame.image.load("CS1\images\\pixilart-drawing.png")
+            button_image = pygame.image.load("images\\pixilart-drawing.png")
             button_image = pygame.transform.scale(button_image, (52, 52))
             level_buttons.append(Button(image=button_image, x_pos=182.857*i, y_pos=200, 
                             text_input=str(i)))
@@ -198,7 +198,7 @@ def MainGameLogic(level):
     inputting = False
 
     #Set up the fire button
-    fire_image = pygame.image.load("CS1\images\\pixilart-drawing.png")
+    fire_image = pygame.image.load("images\\pixilart-drawing.png")
     fire_image = pygame.transform.scale(fire_image, (60, 60))
     fire_button = Button(image=fire_image, x_pos=1200, y_pos=680, text_input="F")
 
@@ -285,7 +285,7 @@ def MainGameLogic(level):
             #Try to create the coordinates
             x = np.linspace(50, 1280, 1280)
             try:
-                y = eval(user_input)+320
+                y = -1*eval(user_input)+320
             #If not successful set attempt to True to allow reattempt from user
             except:
                 attempt = True

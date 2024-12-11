@@ -19,11 +19,11 @@ def lose_screen(screen):
     lose_screen.center = (640, 360)
 
     #Set up the restart and quit button
-    restart_button = Button(image=pygame.image.load("CS1\images\\pixilart-drawing.png"), x_pos=640-25, y_pos=360, text_input="R")
-    quit_button = Button(image=pygame.image.load("CS1\images\\pixilart-drawing.png"), x_pos=640+25, y_pos=360, text_input="Q")
+    restart_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640-25, y_pos=360, text_input="R")
+    quit_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640+25, y_pos=360, text_input="Q")
 
     #blur the background
-    blur = pygame.image.load("CS1\images\\transparent_background.png").convert_alpha()
+    blur = pygame.image.load("images\\transparent_background.png").convert_alpha()
     screen.blit(blur, (0, 0))
 
     while run:
@@ -62,10 +62,10 @@ def win_screen(screen):
     win_screen.center = (640, 360)
 
     #Set up the return to home button
-    home_button = Button(image=pygame.image.load("CS1\images\\pixilart-drawing.png"), x_pos=640, y_pos=360, text_input="H")
+    home_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=360, text_input="H")
 
     #blur the background
-    blur = pygame.image.load("CS1\images\\transparent_background.png").convert_alpha()
+    blur = pygame.image.load("images\\transparent_background.png").convert_alpha()
     screen.blit(blur, (0, 0))
 
     while run:
@@ -103,10 +103,10 @@ def incorrect_equation(screen):
     incorrect_equation.center = (640, 360)
 
     #Set up the ok button
-    ok_button = Button(image=pygame.image.load("CS1\images\\pixilart-drawing.png"), x_pos=640, y_pos=360+25, text_input="K")
+    ok_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=360+25, text_input="K")
 
     #blur the background
-    blur = pygame.image.load("CS1\images\\transparent_background.png").convert_alpha()
+    blur = pygame.image.load("images\\transparent_background.png").convert_alpha()
     screen.blit(blur, (0, 0))
 
     while run:

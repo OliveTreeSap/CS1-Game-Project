@@ -2,7 +2,7 @@ import pygame
 
 
 pygame.init()
-base_font = pygame.font.Font("CS1\Grand9K_Pixel.ttf", 32)
+base_font = pygame.font.Font("Grand9K_Pixel.ttf", 32)
 
 
 class Button():
