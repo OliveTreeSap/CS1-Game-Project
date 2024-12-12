@@ -8,7 +8,7 @@ from add_funcs import RenderText
 pygame.init()
 
 
-def lose_screen(screen):
+def lose_screen(screen, volume):
 
     run = True
     #Return if the user want to restart or not
@@ -19,8 +19,8 @@ def lose_screen(screen):
     lose_screen.center = (640, 360)
 
     #Set up the restart and quit button
-    restart_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640-25, y_pos=360, text_input="R")
-    quit_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640+25, y_pos=360, text_input="Q")
+    restart_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640-25, y_pos=360, text_input="R", volume=volume[0])
+    quit_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640+25, y_pos=360, text_input="Q", volume=volume[0])
 
     #blur the background
     blur = pygame.image.load("images\\transparent_background.png").convert_alpha()
@@ -57,7 +57,7 @@ def lose_screen(screen):
     return restart
 
 
-def win_screen(screen):
+def win_screen(screen, volume):
     
     run = True
 
@@ -66,7 +66,7 @@ def win_screen(screen):
     win_screen.center = (640, 360)
 
     #Set up the return to home button
-    home_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=360, text_input="H")
+    home_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=360, text_input="H", volume=volume[0])
 
     #blur the background
     blur = pygame.image.load("images\\transparent_background.png").convert_alpha()
@@ -98,7 +98,7 @@ def win_screen(screen):
     return home
 
 
-def incorrect_equation(screen):
+def incorrect_equation(screen, volume):
 
     run = True
 
@@ -107,7 +107,7 @@ def incorrect_equation(screen):
     incorrect_equation.center = (640, 360)
 
     #Set up the ok button
-    ok_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=360+25, text_input="K")
+    ok_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=360+25, text_input="K", volume=volume[0])
 
     #blur the background
     blur = pygame.image.load("images\\transparent_background.png").convert_alpha()
@@ -139,7 +139,7 @@ def incorrect_equation(screen):
         pygame.display.update()
 
 
-def pause_screen(screen):
+def pause_screen(screen, volume):
 
     run = True
     #Return the user actions
@@ -150,8 +150,8 @@ def pause_screen(screen):
     pause_screen.center = (640, 360)
 
     #Set up the resume and quit button
-    resume_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640-25, y_pos=360, text_input="R")
-    quit_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640+25, y_pos=360, text_input="Q")
+    resume_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640-25, y_pos=360, text_input="R", volume=volume[0])
+    quit_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640+25, y_pos=360, text_input="Q", volume=volume[0])
 
     #blur the background
     blur = pygame.image.load("images\\transparent_background.png").convert_alpha()

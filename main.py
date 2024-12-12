@@ -2,6 +2,7 @@ import sys
 import pygame
 import numpy as np
 from button import Button
+from slider import Slider
 from add_screens import lose_screen, win_screen, incorrect_equation, pause_screen
 from add_funcs import ln, log2, log10, sin, cos, tan, sqrt, exp, RenderText
 from levels import GetLevel
@@ -25,14 +26,19 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 base_font = pygame.font.Font("Grand9K_Pixel.ttf", 32)
 
 #Easy mode which lenghten the trajectory enough to reach the target
-easy_mode = False
+Difficulty = 0
+
+#Initial volumn of music and sound effects
+music_volume = 0.25
+sfx_volume = 0.5
+Volume = [music_volume, sfx_volume]
 
 
-def MainMenu(screen, menu_font, easy_mode):
+def MainMenu(screen, menu_font, difficulty, volume):
 
     #Load and play the main menu music
     pygame.mixer.music.load("sounds\BitMenu.mp3")
-    pygame.mixer.music.set_volume(0.25)
+    pygame.mixer.music.set_volume(volume[0])
     pygame.mixer.music.play(loops=-1, fade_ms=2500)
 
     #Set the window name to Menu
@@ -40,13 +46,13 @@ def MainMenu(screen, menu_font, easy_mode):
 
     #Initialize the play, options and quit button
     play_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"),
-                         x_pos=640, y_pos=250, text_input="PLAY")
+                         x_pos=640, y_pos=250, text_input="PLAY", volume=volume[1])
     
     options_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"),
-                            x_pos=640, y_pos=400, text_input="OPTIONS")
+                            x_pos=640, y_pos=400, text_input="OPTIONS", volume=volume[1])
     
     quit_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"),
-                         x_pos=640, y_pos=550, text_input="QUIT")
+                         x_pos=640, y_pos=550, text_input="QUIT", volume=volume[1])
 
     while True:
 
@@ -75,10 +81,10 @@ def MainMenu(screen, menu_font, easy_mode):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 #Launch the main game
                 if play_button.CheckForInput(pygame.mouse.get_pos()):
-                    LevelSelector(screen, menu_font, easy_mode)
+                    LevelSelector(screen, menu_font, difficulty, volume)
                 #Switch to the options screen
                 if options_button.CheckForInput(pygame.mouse.get_pos()):
-                    Options(screen, menu_font, easy_mode)
+                    Options(screen, menu_font, difficulty, volume)
                 #Quit the game
                 if quit_button.CheckForInput(pygame.mouse.get_pos()):
                     pygame.quit()
@@ -87,15 +93,26 @@ def MainMenu(screen, menu_font, easy_mode):
         pygame.display.update()
 
 
-def Options(screen, options_font, easy_mode):
+def Options(screen, options_font, difficulty, volume):
 
     #Initialize the back button
     options_back = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=660, 
-                          text_input="BACK")
+                          text_input="BACK", volume=volume[1])
     
-    #Initialize the easy mode switch
-    easy_mode_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=460, 
-                              text_input="Easy Mode", switch=True, alt_image=pygame.image.load("images\\pixilart-drawing_2.png"))
+    #Initialize the easy and hard mode switch
+    easy_mode_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=540, y_pos=460, 
+                              text_input="Easy Mode",switch=True, state=(True if difficulty == 1 else False),
+                              alt_image=pygame.image.load("images\\pixilart-drawing_2.png"), volume=volume[1])
+    
+    hard_mode_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=740, y_pos=460, 
+                              text_input="Hard Mode",switch=True, state=(True if difficulty == -1 else False),
+                              alt_image=pygame.image.load("images\\pixilart-drawing_2.png"), volume=volume[1])
+    
+    music_slider = Slider((640, 200), (250, 25), volume[0], 0, 1, "Music volume: ")
+
+    sfx_slider = Slider((640, 300), (250, 25), volume[1], 0, 1, "Sound effects volume: ")
+
+    sliders = [music_slider, sfx_slider]
 
     while True:
 
@@ -103,19 +120,33 @@ def Options(screen, options_font, easy_mode):
         screen.fill((202,228,241))
 
         #Display the options screen text
-        RenderText(screen, 640, 260, "Options", "black", 32, center=True)
+        RenderText(screen, 640, 100, "Options", "black", 32, center=True)
 
         #Get the current mouse position
         mouse_pos = pygame.mouse.get_pos()
         
-        #Update the visual of the easy mode switch
+        #Update the visual of the easy and hard mode switch
         easy_mode_button.ChangeColor(mouse_pos)
         easy_mode_button.Update(screen)
+        
+        hard_mode_button.ChangeColor(mouse_pos)
+        hard_mode_button.Update(screen)
 
         #Update the visual of the back button
         options_back.ChangeColor(mouse_pos)
         options_back.Update(screen)
 
+        #Update the visual of the sliders
+        for slider in sliders:
+            slider.UpdateSlider(screen)
+            slider.DisplayValue(screen)
+            slider.DisplayLabel(screen)
+
+        #Render difficulty text and some information
+        RenderText(screen, 640, 400, "Difficulty", "black", 32,center=True)
+        RenderText(screen, 640, 500, "Note: the most rencently clicked button will take priority!", "darkgray", 18,center=True)
+
+        
         #Event handler
         for event in pygame.event.get():
 
@@ -127,16 +158,32 @@ def Options(screen, options_font, easy_mode):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 
                 if easy_mode_button.CheckForInput(mouse_pos):
-                    easy_mode = not easy_mode
+                    difficulty = 1
+                if hard_mode_button.CheckForInput(mouse_pos):
+                    difficulty = -1
+                if (not easy_mode_button.state) and (not hard_mode_button.state):
+                    difficulty = 0
 
                 if options_back.CheckForInput(mouse_pos):
                     #Return to the main menu
-                    MainMenu(screen, options_font, easy_mode)
+                    MainMenu(screen, options_font, difficulty, volume)
+
+
+        #Check if the user is holding down left click
+        #and move the button of the slider to the appropriate location
+        mouse = pygame.mouse.get_pressed()
+        if mouse[0]:
+            for i in range(len(sliders)):
+                if sliders[i].container_rect.collidepoint(mouse_pos):
+                        sliders[i].MoveSlider(mouse_pos)
+                        volume[i] = sliders[i].GetValue()
+                        print(volume)
+
 
         pygame.display.update()
 
 
-def LevelSelector(screen, level_select_font, easy_mode):
+def LevelSelector(screen, level_select_font, difficulty, volume):
 
     while True:
 
@@ -151,7 +198,7 @@ def LevelSelector(screen, level_select_font, easy_mode):
 
         #Initialize the back button
         level_select_back = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=1180, y_pos=660, 
-                            text_input="BACK")
+                            text_input="BACK", volume=volume[1])
 
         #Update the visual of the back button
         level_select_back.ChangeColor(mouse_pos)
@@ -165,7 +212,7 @@ def LevelSelector(screen, level_select_font, easy_mode):
             button_image = pygame.image.load("images\\pixilart-drawing.png")
             button_image = pygame.transform.scale(button_image, (52, 52))
             level_buttons.append(Button(image=button_image, x_pos=182.857*i, y_pos=200, 
-                            text_input=str(i)))
+                            text_input=str(i), volume=volume[1]))
             
         #Update the visual of each level button
         for button in level_buttons:
@@ -184,18 +231,18 @@ def LevelSelector(screen, level_select_font, easy_mode):
                 #Check if the back button was clicked
                 if level_select_back.CheckForInput(mouse_pos):
                     #Return to the main menu
-                    MainMenu(screen, level_select_font, easy_mode)
+                    MainMenu(screen, level_select_font, difficulty, volume)
                 
                 #Check if any of the level button was clicked
                 for button in level_buttons:
                     if button.CheckForInput(mouse_pos):
                         pygame.mixer.music.stop()
-                        MainGameLogic(button.text_input, easy_mode)
+                        MainGameLogic(button.text_input, level_select_font,difficulty, volume)
 
         pygame.display.update()
 
 
-def MainGameLogic(level, easy_mode):
+def MainGameLogic(level, game_font, difficulty, volume):
     
     #Changes the title of the window
     pygame.display.set_caption("Level " + level)
@@ -217,9 +264,11 @@ def MainGameLogic(level, easy_mode):
     #Set up the fire button
     fire_image = pygame.image.load("images\\pixilart-drawing.png")
     fire_image = pygame.transform.scale(fire_image, (60, 60))
-    fire_button = Button(image=fire_image, x_pos=1200, y_pos=680, text_input="F")
+    fire_button = Button(image=fire_image, x_pos=1200, y_pos=680, text_input="F", volume=volume[1])
 
     #Variables related to firing the projectile
+    fire_sfx = pygame.mixer.Sound("sounds/fire.mp3")
+    pygame.mixer.Sound.set_volume(fire_sfx, volume[0])
     fire = False
     attempt = True
     firing = False
@@ -230,9 +279,15 @@ def MainGameLogic(level, easy_mode):
     lose = False
     win = False
 
+    #Losing and winning sound effects
+    win_sfx = pygame.mixer.Sound("sounds/win.wav")
+    lose_sfx = pygame.mixer.Sound("sounds/lose.mp3")
+    pygame.mixer.Sound.set_volume(win_sfx, volume[0])
+    pygame.mixer.Sound.set_volume(lose_sfx, volume[0])
+
     #Load and play the music of the game
     pygame.mixer.music.load("sounds\FunnyBit.mp3")
-    pygame.mixer.music.set_volume(0.25)
+    pygame.mixer.music.set_volume(volume[0])
     pygame.mixer.music.play(loops=-1, fade_ms=2500)
 
     #Main loop of the game
@@ -244,8 +299,8 @@ def MainGameLogic(level, easy_mode):
         #Display the trajectory of the projectile and initialize the x coordinate
         trajectory = False
         try:
-            x_trajectory = x[:640*(1+easy_mode):50]
-            y_trajectory = (-1*eval(user_input)+320)[:640*(1+easy_mode):50]
+            x_trajectory = x[:640*(1+difficulty):50]
+            y_trajectory = (-1*eval(user_input)+320)[:640*(1+difficulty):50]
             trajectory = True
         except:
             trajectory = False
@@ -314,11 +369,11 @@ def MainGameLogic(level, easy_mode):
 
                 #Display the pause if the user pressed the esc key
                 if event.key == pygame.K_ESCAPE:
-                    if pause_screen(screen):
+                    if pause_screen(screen, volume):
                         pass
                     else:
                         pygame.mixer.music.stop()
-                        LevelSelector(screen, base_font, easy_mode)
+                        MainMenu(screen, game_font, difficulty, volume)
 
         #Check if the fire condition is True
         if fire:
@@ -328,11 +383,12 @@ def MainGameLogic(level, easy_mode):
             #Try to create the coordinates
             try:
                 y = -1*eval(user_input)+320
+                fire_sfx.play()
             #If not successful set attempt to True to allow reattempt from user
             except:
                 attempt = True
                 firing = False
-                incorrect_equation(screen)
+                incorrect_equation(screen, volume)
 
         #Animate the projectile
         if firing:
@@ -342,45 +398,49 @@ def MainGameLogic(level, easy_mode):
             current_x += 1
             #Code to check if the projectile is taking too long to reach the target
             if current_x > 1280:
+                lose_sfx.play()
                 lose = True
 
             #Check if the projectile collided with the borders
             for border in [top_rect, bottom_rect, left_rect, right_rect]:
                 if border.colliderect(projectile):
+                    lose_sfx.play()
                     lose = True
 
             #Check if the projectile collided with the obstacle(s)
             if len(current_level) > 1:
                 for obstacle in current_level[1:]:
                     if obstacle.CheckColision(projectile):
+                        lose_sfx.play()
                         lose = True
 
             #Check if the projectile collided with the target
             if target.CheckColision(projectile):
+                win_sfx.play()
                 win = True
 
             #Display the losing screen
             if lose:
-                restart = lose_screen(screen)
+                restart = lose_screen(screen, volume)
                 if restart:
-                    MainGameLogic(level)
+                    MainGameLogic(level, game_font, difficulty, volume)
                 else:
                     pygame.mixer.music.stop()
                     #Reset the music
                     pygame.mixer.music.load("sounds\BitMenu.mp3")
-                    pygame.mixer.music.set_volume(0.25)
+                    pygame.mixer.music.set_volume(volume[0])
                     pygame.mixer.music.play(loops=-1, fade_ms=2500)
-                    LevelSelector(screen, base_font, easy_mode)
+                    MainMenu(screen, game_font, difficulty, volume)
 
             #Diplay the winning screen
             if win:
-                if win_screen(screen):
+                if win_screen(screen, volume):
                     pygame.mixer.music.stop()
                     #Reset the music
                     pygame.mixer.music.load("sounds\BitMenu.mp3")
-                    pygame.mixer.music.set_volume(0.25)
+                    pygame.mixer.music.set_volume(volume[0])
                     pygame.mixer.music.play(loops=-1, fade_ms=2500)
-                    LevelSelector(screen, base_font, easy_mode)
+                    LevelSelector(screen, base_font, difficulty, volume)
 
         #Set the speed of the game
         clock.tick(20000)
@@ -389,4 +449,4 @@ def MainGameLogic(level, easy_mode):
         pygame.display.update()
 
 
-MainMenu(screen, base_font, easy_mode)
+MainMenu(screen, base_font, Difficulty, Volume)
