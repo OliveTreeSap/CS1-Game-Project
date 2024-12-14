@@ -3,8 +3,11 @@
 1. Click on the green code button and then click download zip 
 2. Unzip the file on your computer
 3. Right click on an empty space inside the folder and choose open in Terminal/Windows PowerShell
-4. Inside the Terminal/Windows PowerShell, run pip install -r requirements.txt
-5. Open the main.py file with an IDE and run the file
+4. Inside the Terminal/Windows PowerShell, run "pip install -r requirements.txt"
+5. Inside the Terminal/Windows PowerShell, run "python -m main"
+>***Note 1: if running "pip install -r requirements.txt" returns an error, you can opt to run "pip install numpy" and "pip install pygame" seperately.***  
+>***Note 2: if running "python -m main" doesn't run the game or returns an error, you can open the main.py file with your preferred IDE and run it there.***
+>>***Remember to change the directory to the folder the main.py file is currently in.***
 
 # **Credits**
 
@@ -43,4 +46,5 @@ The *slider class* was taken from [Coding with Sphere's](https://www.youtube.com
 - sqrt(): square root
 - exp(): exponent
 
->***Remeber to use brackets () to separate each part of the equations so they don't get mixed up.***
+>***Remeber to use brackets () to separate each part of the equations so they don't get mixed up.***  
+>***A more complete version of the tutorial is available in the options tab of the game.***
