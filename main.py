@@ -22,8 +22,14 @@ SCREEN_WIDTH = 1280
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-#Load the default font
-base_font = pygame.font.Font("Grand9K_Pixel.ttf", 32)
+#Load the fonts
+base_font_1 = pygame.font.Font("Grand9K_Pixel.ttf", 40)
+base_font_2 = pygame.font.Font("Grand9K_Pixel.ttf", 35)
+base_font_3 = pygame.font.Font("Grand9K_Pixel.ttf", 30)
+base_font_4 = pygame.font.Font("Grand9K_Pixel.ttf", 25)
+base_font_5 = pygame.font.Font("Grand9K_Pixel.ttf", 20)
+
+fonts = [base_font_1, base_font_2, base_font_3, base_font_4, base_font_5]
 
 #Easy mode which lenghten the trajectory enough to reach the target
 Difficulty = 0
@@ -46,13 +52,13 @@ def MainMenu(screen, menu_font, difficulty, volume):
 
     #Initialize the play, options and quit button
     play_button = Button(image=pygame.image.load("images\\pixilart-drawing.png").convert(),
-                         x_pos=640, y_pos=250, text_input="PLAY", volume=volume[1])
+                         x_pos=640, y_pos=250, text_input="PLAY", font=menu_font[1],volume=volume[1])
     
     options_button = Button(image=pygame.image.load("images\\pixilart-drawing.png").convert(),
-                            x_pos=640, y_pos=400, text_input="OPTIONS", volume=volume[1])
+                            x_pos=640, y_pos=400, text_input="OPTIONS", font=menu_font[1], volume=volume[1])
     
     quit_button = Button(image=pygame.image.load("images\\pixilart-drawing.png").convert(),
-                         x_pos=640, y_pos=550, text_input="QUIT", volume=volume[1])
+                         x_pos=640, y_pos=550, text_input="QUIT", font=menu_font[1], volume=volume[1])
 
     while True:
 
@@ -63,7 +69,7 @@ def MainMenu(screen, menu_font, difficulty, volume):
         mouse_pos = pygame.mouse.get_pos()
 
         #Display the main menu title/ game title
-        RenderText(screen, 640, 100, "MAIN MENU", "black", 32, font=menu_font, center=True)
+        RenderText(screen, 640, 100, "MAIN MENU", "black", font=menu_font[0], center=True)
 
         #Update the visual of each button
         for button in [play_button, options_button, quit_button]:
@@ -97,23 +103,23 @@ def Options(screen, options_font, difficulty, volume):
 
     #Initialize the back button
     options_back = Button(image=pygame.image.load("images\\pixilart-drawing.png").convert(), x_pos=640, y_pos=660, 
-                          text_input="BACK", volume=volume[1])
+                          text_input="BACK", font=options_font[3], volume=volume[1])
     
     tutorial_button = Button(image=pygame.image.load("images\\pixilart-drawing.png").convert(), x_pos=640, y_pos=550,
-                             text_input="Tutorial", volume=volume[1])
+                             text_input="Tutorial", font=options_font[2], volume=volume[1])
     
     #Initialize the easy and hard mode switch
     easy_mode_button = Button(image=pygame.image.load("images\\pixilart-drawing.png").convert(), x_pos=540, y_pos=410, 
                               text_input="Easy Mode",switch=True, state=(True if difficulty == 1 else False),
-                              alt_image=pygame.image.load("images\\pixilart-drawing_2.png"), volume=volume[1])
+                              alt_image=pygame.image.load("images\\pixilart-drawing_2.png"), font=options_font[2], volume=volume[1])
     
     hard_mode_button = Button(image=pygame.image.load("images\\pixilart-drawing.png").convert(), x_pos=740, y_pos=410, 
                               text_input="Hard Mode",switch=True, state=(True if difficulty == -1 else False),
-                              alt_image=pygame.image.load("images\\pixilart-drawing_2.png").convert(), volume=volume[1])
+                              alt_image=pygame.image.load("images\\pixilart-drawing_2.png").convert(), font=options_font[2], volume=volume[1])
     
-    music_slider = Slider((640, 175), (250, 25), volume[0], 0, 1, "Music volume: ", font=options_font)
+    music_slider = Slider((640, 175), (250, 25), volume[0], 0, 1, "Music volume: ", label_font=options_font[2], value_font=options_font[4])
 
-    sfx_slider = Slider((640, 275), (250, 25), volume[1], 0, 1, "Sound effects volume: ", font=options_font)
+    sfx_slider = Slider((640, 275), (250, 25), volume[1], 0, 1, "Sound effects volume: ", label_font=options_font[2], value_font=options_font[4])
 
     sliders = [music_slider, sfx_slider]
 
@@ -123,7 +129,7 @@ def Options(screen, options_font, difficulty, volume):
         screen.fill((202,228,241))
 
         #Display the options screen text
-        RenderText(screen, 640, 50, "Options", "black", 32, font=options_font, center=True)
+        RenderText(screen, 640, 50, "Options", "black", font=options_font[0], center=True)
 
         #Get the current mouse position
         mouse_pos = pygame.mouse.get_pos()
@@ -140,8 +146,8 @@ def Options(screen, options_font, difficulty, volume):
             slider.DisplayLabel(screen)
 
         #Render difficulty text and some information
-        RenderText(screen, 640, 350, "Difficulty", "black", 32, font=options_font, center=True)
-        RenderText(screen, 640, 450, "Note: the most rencently clicked button will take priority!", "darkgray", 18, font=options_font, center=True)
+        RenderText(screen, 640, 350, "Difficulty", "black", font=options_font[2], center=True)
+        RenderText(screen, 640, 450, "Note: the most rencently clicked button will take priority!", "darkgray", font=options_font[4], center=True)
 
         
         #Event handler
@@ -191,14 +197,14 @@ def LevelSelector(screen, level_select_font, difficulty, volume):
 
     #Initialize the back button
     level_select_back = Button(image=pygame.image.load("images\\pixilart-drawing.png").convert(), x_pos=1180, y_pos=660, 
-                        text_input="BACK", volume=volume[1])
+                        text_input="BACK", font=level_select_font[3], volume=volume[1])
     
     #Create each button for their respective levels
     for i in range(1, 7):
         button_image = pygame.image.load("images\\pixilart-drawing.png").convert()
         button_image = pygame.transform.scale(button_image, (52, 52))
         level_buttons.append(Button(image=button_image, x_pos=182.857*i, y_pos=200, 
-                        text_input=str(i), volume=volume[1]))
+                        text_input=str(i), font=level_select_font[2], volume=volume[1]))
 
     while True:
 
@@ -209,7 +215,7 @@ def LevelSelector(screen, level_select_font, difficulty, volume):
         mouse_pos = pygame.mouse.get_pos()
 
         #Set up the options screen text
-        RenderText(screen, 640, 100, "Choose a level", "black", 32, font=level_select_font, center=True)
+        RenderText(screen, 640, 100, "Choose a level", "black", font=level_select_font[0], center=True)
 
         #Update the visual of the back button
         level_select_back.ChangeColor(mouse_pos)
@@ -269,7 +275,7 @@ def MainGameLogic(level, game_font, difficulty, volume):
     #Set up the fire button
     fire_image = pygame.image.load("images\\pixilart-drawing.png").convert()
     fire_image = pygame.transform.scale(fire_image, (60, 60))
-    fire_button = Button(image=fire_image, x_pos=1200, y_pos=680, text_input="F", volume=volume[1])
+    fire_button = Button(image=fire_image, x_pos=1200, y_pos=680, text_input="F", font=game_font[2],volume=volume[1])
 
     #Variables related to firing the projectile
     fire_sfx = pygame.mixer.Sound("sounds/fire.mp3")
@@ -329,12 +335,12 @@ def MainGameLogic(level, game_font, difficulty, volume):
         #Render the text box and input text
         pygame.draw.rect(screen, input_box_color, input_box, 2)
         RenderText(screen=screen, x=input_box.x - 60, y=input_box.y + 5,
-                text="y =", color="black", size=32, font=game_font)
+                text="y =", color="black", font=game_font[2])
         RenderText(screen=screen, x=input_box.x + 15, y=input_box.y + 5,
-                text=user_input[-50:], color="black", size=32, font=game_font)
+                text=user_input[-50:], color="black", font=game_font[2])
         
         #Update the cursor_rect location
-        cursor_pos = game_font.render(user_input[:cursor], True, "black").get_rect()
+        cursor_pos = game_font[2].render(user_input[:cursor], True, "black").get_rect()
         cursor_rect = pygame.Rect(110 + cursor_pos[2], 660, 3, 40)
 
         #Draw the cursor blinking
@@ -455,7 +461,7 @@ def MainGameLogic(level, game_font, difficulty, volume):
 
             #Display the losing screen
             if lose:
-                restart = lose_screen(screen, volume)
+                restart = lose_screen(screen, volume, game_font)
                 if restart:
                     MainGameLogic(level, game_font, difficulty, volume)
                 else:
@@ -468,16 +474,16 @@ def MainGameLogic(level, game_font, difficulty, volume):
 
             #Diplay the winning screen
             if win:
-                if win_screen(screen, volume):
+                if win_screen(screen, volume, game_font):
                     pygame.mixer.music.stop()
                     #Reset the music
                     pygame.mixer.music.load("sounds\BitMenu.mp3")
                     pygame.mixer.music.set_volume(volume[0])
                     pygame.mixer.music.play(loops=-1, fade_ms=2500)
-                    MainMenu(screen, base_font, difficulty, volume)
+                    MainMenu(screen, game_font, difficulty, volume)
                 else:
                     if int(level) == GetNumLevel():
-                        congrats(screen, volume)
+                        congrats(screen, volume, game_font)
                         MainMenu(screen, game_font, difficulty, volume)
                     else:
                         MainGameLogic(str(int(level)+1), game_font, difficulty, volume)
@@ -489,4 +495,4 @@ def MainGameLogic(level, game_font, difficulty, volume):
         pygame.display.update()
 
 
-MainMenu(screen, base_font, Difficulty, Volume)
+MainMenu(screen, fonts, Difficulty, Volume)

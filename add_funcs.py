@@ -36,7 +36,7 @@ def exp(x, a):
 
 
 #text render function
-def RenderText(screen, x, y, text, color, size, font,center=False):
+def RenderText(screen, x, y, text, color, font, center=False):
     text_surface = font.render(text, True, color)
     if center:
         text_rect = text_surface.get_rect(center=(x, y))

@@ -11,13 +11,14 @@ class Button():
 
 
     #Initialize the button class and its properties
-    def __init__(self, image, x_pos, y_pos, text_input, volume, switch=False, state=False, alt_image=None):
+    def __init__(self, image, x_pos, y_pos, text_input, font, volume, switch=False, state=False, alt_image=None):
         self.image = image
         self.x_pos = x_pos
         self.y_pos = y_pos
+        self.font = font
         self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
         self.text_input = text_input
-        self.text = base_font.render(self.text_input, True, "black")
+        self.text = self.font.render(self.text_input, True, "black")
         self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
 
         self.volume = volume

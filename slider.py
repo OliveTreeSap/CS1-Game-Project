@@ -9,13 +9,14 @@ class Slider():
 
     
     #Initialize the slider and its properties
-    def __init__(self, center, size, initial_val, min_val, max_val, label, font):
+    def __init__(self, center, size, initial_val, min_val, max_val, label, label_font, value_font):
         self.center = center
         self.size = size
         self.min_val = min_val
         self.max_val = max_val
         self.label = label
-        self.font = font
+        self.label_font = label_font
+        self.value_font = value_font
 
         self.top_pos = self.center[1] - self.size[1]/2
         self.left_pos = self.center[0] - self.size[0]/2
@@ -47,9 +48,9 @@ class Slider():
 
     #Display the label of the slider
     def DisplayLabel(self, screen):
-        RenderText(screen, self.container_rect.centerx, self.top_pos-35, self.label, "black", 32, font=self.font, center=True)
+        RenderText(screen, self.container_rect.centerx, self.top_pos-35, self.label, "black", self.label_font, center=True)
     
 
     #Display the value next to the slider
     def DisplayValue(self, screen):
-        RenderText(screen, self.left_pos + self.size[0] + 50, self.container_rect.centery, "{:.2f}".format(self.GetValue()), "black", 22, font=self.font, center=True)
+        RenderText(screen, self.left_pos + self.size[0] + 50, self.container_rect.centery, "{:.2f}".format(self.GetValue()), "black", self.value_font, center=True)

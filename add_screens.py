@@ -8,7 +8,7 @@ from add_funcs import RenderText
 pygame.init()
 
 
-def lose_screen(screen, volume):
+def lose_screen(screen, volume, font):
 
     run = True
     #Return if the user want to restart or not
@@ -19,8 +19,8 @@ def lose_screen(screen, volume):
     lose_screen.center = (640, 360)
 
     #Set up the restart and quit button
-    restart_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640-25, y_pos=360, text_input="R", volume=volume[1])
-    quit_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640+25, y_pos=360, text_input="Q", volume=volume[1])
+    restart_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640-25, y_pos=360, text_input="R", font=font[2], volume=volume[1])
+    quit_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640+25, y_pos=360, text_input="Q", font=font[2], volume=volume[1])
 
     #blur the background
     blur = pygame.image.load("images\\transparent_background.png").convert_alpha()
@@ -60,18 +60,18 @@ def lose_screen(screen, volume):
     return restart
 
 
-def win_screen(screen, volume):
+def win_screen(screen, volume, font):
     
     run = True
 
     #Set up the win screen
-    win_screen = pygame.Rect(-1000, -1000, 640, 360)
+    win_screen = pygame.Rect(-1000, -1000, 768, 432)
     win_screen.center = (640, 360)
 
     #Set up the return to main menu  and continue to next level buttons
-    home_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=400, text_input="Main menu", volume=volume[1])
+    home_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=400, text_input="Main menu", font=font[2], volume=volume[1])
 
-    continue_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=320, text_input="Next level", volume=volume[1])
+    continue_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=320, text_input="Next level", font=font[2], volume=volume[1])
 
     #blur the background
     blur = pygame.image.load("images\\transparent_background.png").convert_alpha()
@@ -116,11 +116,11 @@ def incorrect_equation(screen, volume, font):
     run = True
 
     #Set up the correction screen
-    incorrect_equation = pygame.Rect(-1000, -1000, 640, 360)
+    incorrect_equation = pygame.Rect(-1000, -1000, 768, 432)
     incorrect_equation.center = (640, 360)
 
     #Set up the ok button
-    ok_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=360+25, text_input="K", volume=volume[1])
+    ok_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=360+25, text_input="K", font=font[2], volume=volume[1])
 
     #blur the background
     blur = pygame.image.load("images\\transparent_background.png").convert_alpha()
@@ -149,25 +149,25 @@ def incorrect_equation(screen, volume, font):
         ok_button.Update(screen)
 
         #Display text warning the user
-        RenderText(screen, 640, 360-50, "You inputted an incorrect equation", "Black", 32, font=font, center=True)
+        RenderText(screen, 640, 360-50, "You inputted an incorrect equation", "Black", font=font[2], center=True)
 
         #Update the screen
         pygame.display.update()
 
 
-def pause_screen(screen, volume):
+def pause_screen(screen, volume, font):
 
     run = True
     #Return the user actions
     resume = False
 
     #Set up the pause screen
-    pause_screen = pygame.Rect(-1000, -1000, 640, 360)
+    pause_screen = pygame.Rect(-1000, -1000, 768, 432)
     pause_screen.center = (640, 360)
 
     #Set up the resume and quit button
-    resume_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640-25, y_pos=360, text_input="R", volume=volume[1])
-    quit_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640+25, y_pos=360, text_input="Q", volume=volume[1])
+    resume_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640-25, y_pos=360, text_input="R", font=font[2], volume=volume[1])
+    quit_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640+25, y_pos=360, text_input="Q", font=font[2], volume=volume[1])
 
     #blur the background
     blur = pygame.image.load("images\\transparent_background.png").convert_alpha()
@@ -218,11 +218,11 @@ def congrats(screen, volume, font):
     run = True
 
     #Set up the correction screen
-    congrats = pygame.Rect(-1000, -1000, 640, 360)
+    congrats = pygame.Rect(-1000, -1000, 768, 432)
     congrats.center = (640, 360)
 
     #Set up the ok button
-    ok_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=360+25, text_input="Ok", volume=volume[1])
+    ok_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=360+25, text_input="Ok", font=font[2], volume=volume[1])
 
     #blur the background
     blur = pygame.image.load("images\\transparent_background.png").convert_alpha()
@@ -251,7 +251,7 @@ def congrats(screen, volume, font):
         ok_button.Update(screen)
 
         #Display text warning the user
-        RenderText(screen, 640, 360-50, "Congratulations, you've beaten the game!", "Black", 32, font=font, center=True)
+        RenderText(screen, 640, 360-50, "Congratulations, you've beaten the game!", "Black", font=font[2], center=True)
 
         #Update the screen
         pygame.display.update()
@@ -271,7 +271,7 @@ def tutorial(screen, volume, font):
     while run:
 
         #Initialize the back button
-        back_button = Button(image=pygame.image.load("images\\pixilart-drawing.png").convert(), x_pos=620, y_pos=-y+1300, text_input="Back", volume=volume[1])
+        back_button = Button(image=pygame.image.load("images\\pixilart-drawing.png").convert(), x_pos=620, y_pos=-y+1350, text_input="Back", font=font[2], volume=volume[1])
 
         #Get mouse position
         mouse_pos = pygame.mouse.get_pos()
@@ -293,38 +293,39 @@ def tutorial(screen, volume, font):
         back_button.Update(screen)
 
         #Render the tutorial text
-        RenderText(screen, 620, -y+50, "Basic syntax", "#964B00", 40, font=font, center=True)
-        RenderText(screen, 700, -y+100, "Logarithmic Functions:",  "#A4550A", 35, font=font)
-        RenderText(screen, 700, -y+150, "ln(x): natual logarithm", "#4DE64D", 30, font=font)
-        RenderText(screen, 700, -y+200, "log2(x): base 2 logarithm", "#40D940", 30, font=font)
-        RenderText(screen, 700, -y+250, "log10(x): base 10 logarithm", "#33CC33", 30, font=font)
-        RenderText(screen, 700, -y+300, "Trigonometric Functions:",  "#A4550A", 35, font=font)
-        RenderText(screen, 700, -y+350, "sin(x): sine", "#4AE34A", 30, font=font)
-        RenderText(screen, 700, -y+400, "cos(x): cosine", "#60F960", 30, font=font)
-        RenderText(screen, 700, -y+450, "tan(x): tangent", "#30C930", 30, font=font)
-        RenderText(screen, 200, -y+100, "Operators:",  "#A4550A", 35, font=font)
-        RenderText(screen, 200, -y+150, "+: plus", "#4DE64D", 30, font=font)
-        RenderText(screen, 200, -y+200, "-: minus", "#40D940", 30, font=font)
-        RenderText(screen, 200, -y+250, "*: multiply", "#33CC33", 30, font=font)
-        RenderText(screen, 200, -y+300, "/: divide", "#4AE34A", 30, font=font)
-        RenderText(screen, 200, -y+350, "Other Functions:",  "#A4550A", 35, font=font)
-        RenderText(screen, 200, -y+400, "abs(x): absolute value", "#60F960", 30, font=font)
-        RenderText(screen, 200, -y+450, "sqrt(x): square root", "#30C930", 30, font=font)
-        RenderText(screen, 200, -y+500, "exp(x, a): exponent", "#009900", 30, font=font)
+        RenderText(screen, 620, -y+50, "Basic syntax", "#964B00", font=font[0], center=True)
+        RenderText(screen, 700, -y+100, "Logarithmic Functions:",  "#A4550A", font=font[1])
+        RenderText(screen, 700, -y+150, "ln(x): natual logarithm", "#4DE64D", font=font[2])
+        RenderText(screen, 700, -y+200, "log2(x): base 2 logarithm", "#40D940", font=font[2])
+        RenderText(screen, 700, -y+250, "log10(x): base 10 logarithm", "#33CC33", font=font[2])
+        RenderText(screen, 700, -y+300, "Trigonometric Functions:",  "#A4550A", font=font[1])
+        RenderText(screen, 700, -y+350, "sin(x): sine", "#4AE34A", font=font[2])
+        RenderText(screen, 700, -y+400, "cos(x): cosine", "#60F960", font=font[2])
+        RenderText(screen, 700, -y+450, "tan(x): tangent", "#30C930", font=font[2])
+        RenderText(screen, 200, -y+100, "Operators:",  "#A4550A", font=font[1])
+        RenderText(screen, 200, -y+150, "+: plus", "#4DE64D", font=font[2])
+        RenderText(screen, 200, -y+200, "-: minus", "#40D940", font=font[2])
+        RenderText(screen, 200, -y+250, "*: multiply", "#33CC33", font=font[2])
+        RenderText(screen, 200, -y+300, "/: divide", "#4AE34A", font=font[2])
+        RenderText(screen, 200, -y+350, "Other Functions:",  "#A4550A", font=font[1])
+        RenderText(screen, 200, -y+400, "abs(x): absolute value", "#60F960", font=font[2])
+        RenderText(screen, 200, -y+450, "sqrt(x): square root", "#30C930", font=font[2])
+        RenderText(screen, 200, -y+500, "exp(x, a): exponent", "#009900", font=font[2])
 
-        RenderText(screen, 620, -y+600, "Moving the graph", "#964B00", 40, font=font, center=True)
-        RenderText(screen, 620, -y+650, "Vertical and Horizontal Shifts:",  "#A4550A", 35, font=font, center=True)
-        RenderText(screen, 620, -y+700, "f(x) + c: shift the graph c pixels upward", "#66FF66", 30, font=font, center=True)
-        RenderText(screen, 620, -y+750, "f(x) - c: shift the graph c pixels downward", "#60F960", 30, font=font, center=True)
-        RenderText(screen, 620, -y+800, "f(x + c): shift the graph c pixels to the left", "#5AF35A", 30, font=font, center=True)
-        RenderText(screen, 620, -y+850, "f(x - c): shift the graph c pixels to the right", "#4DE64D", 30, font=font, center=True)
-        RenderText(screen, 620, -y+900, "Vertical and Horizontal Stretching and Reflecting:",  "#A4550A", 35, font=font, center=True)
-        RenderText(screen, 620, -y+950, "c*f(x): stretch the graph vertically by a factor of c", "#40D940", 30, font=font, center=True)
-        RenderText(screen, 620, -y+1000, "(1/c)*f(x): shrink the graph vertically by a factor of c", "#33CC33", 30, font=font, center=True)
-        RenderText(screen, 620, -y+1050, "f(c*x): shrink the graph horizontally by a factor of c", "#4AE34A", 30, font=font, center=True)
-        RenderText(screen, 620, -y+1100, "f(x/c): stretch the graph horizontally by a factor of c", "#60F960", 30, font=font, center=True)
-        RenderText(screen, 620, -y+1150, "-1*f(x): reflect the graph about the x-axis", "#30C930", 30, font=font, center=True)
-        RenderText(screen, 620, -y+1200, "f(-1*x): reflect the graph about the y-axis", "#009900", 30, font=font, center=True)
+        RenderText(screen, 620, -y+600, "Moving the graph", "#964B00", font=font[0], center=True)
+        RenderText(screen, 620, -y+650, "Vertical and Horizontal Shifts:",  "#A4550A", font=font[1], center=True)
+        RenderText(screen, 620, -y+700, "f(x) + c: shift the graph c pixels upward", "#66FF66", font=font[2], center=True)
+        RenderText(screen, 620, -y+750, "f(x) - c: shift the graph c pixels downward", "#60F960", font=font[2], center=True)
+        RenderText(screen, 620, -y+800, "f(x + c): shift the graph c pixels to the left", "#5AF35A", font=font[2], center=True)
+        RenderText(screen, 620, -y+850, "f(x - c): shift the graph c pixels to the right", "#4DE64D", font=font[2], center=True)
+        RenderText(screen, 620, -y+900, "Vertical and Horizontal Stretching and Reflecting:",  "#A4550A", font=font[1], center=True)
+        RenderText(screen, 620, -y+950, "c*f(x): stretch the graph vertically by a factor of c", "#40D940", font=font[2], center=True)
+        RenderText(screen, 620, -y+1000, "(1/c)*f(x): shrink the graph vertically by a factor of c", "#33CC33", font=font[2], center=True)
+        RenderText(screen, 620, -y+1050, "f(c*x): shrink the graph horizontally by a factor of c", "#4AE34A", font=font[2], center=True)
+        RenderText(screen, 620, -y+1100, "f(x/c): stretch the graph horizontally by a factor of c", "#60F960", font=font[2], center=True)
+        RenderText(screen, 620, -y+1150, "-1*f(x): reflect the graph about the x-axis", "#30C930", font=font[2], center=True)
+        RenderText(screen, 620, -y+1200, "f(-1*x): reflect the graph about the y-axis", "#009900", font=font[2], center=True)
+        RenderText(screen, 620, -y+1250, "Remember to use brackets () to separate parts of the equation so they don't get mixed up", "#A4550A", font=font[4], center=True)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
