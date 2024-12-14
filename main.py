@@ -3,9 +3,9 @@ import pygame
 import numpy as np
 from button import Button
 from slider import Slider
-from add_screens import lose_screen, win_screen, incorrect_equation, pause_screen
+from add_screens import lose_screen, win_screen, incorrect_equation, pause_screen, congrats, tutorial
 from add_funcs import ln, log2, log10, sin, cos, tan, sqrt, exp, RenderText
-from levels import GetLevel
+from levels import GetLevel, GetNumLevel
 
 
 #Math constants
@@ -30,7 +30,7 @@ Difficulty = 0
 
 #Initial volumn of music and sound effects
 music_volume = 0.25
-sfx_volume = 0.5
+sfx_volume = 0.75
 Volume = [music_volume, sfx_volume]
 
 
@@ -99,18 +99,21 @@ def Options(screen, options_font, difficulty, volume):
     options_back = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=660, 
                           text_input="BACK", volume=volume[1])
     
+    tutorial_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=550,
+                             text_input="Tutorial", volume=volume[1])
+    
     #Initialize the easy and hard mode switch
-    easy_mode_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=540, y_pos=460, 
+    easy_mode_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=540, y_pos=410, 
                               text_input="Easy Mode",switch=True, state=(True if difficulty == 1 else False),
                               alt_image=pygame.image.load("images\\pixilart-drawing_2.png"), volume=volume[1])
     
-    hard_mode_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=740, y_pos=460, 
+    hard_mode_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=740, y_pos=410, 
                               text_input="Hard Mode",switch=True, state=(True if difficulty == -1 else False),
                               alt_image=pygame.image.load("images\\pixilart-drawing_2.png"), volume=volume[1])
     
-    music_slider = Slider((640, 200), (250, 25), volume[0], 0, 1, "Music volume: ")
+    music_slider = Slider((640, 175), (250, 25), volume[0], 0, 1, "Music volume: ")
 
-    sfx_slider = Slider((640, 300), (250, 25), volume[1], 0, 1, "Sound effects volume: ")
+    sfx_slider = Slider((640, 275), (250, 25), volume[1], 0, 1, "Sound effects volume: ")
 
     sliders = [music_slider, sfx_slider]
 
@@ -120,21 +123,15 @@ def Options(screen, options_font, difficulty, volume):
         screen.fill((202,228,241))
 
         #Display the options screen text
-        RenderText(screen, 640, 100, "Options", "black", 32, center=True)
+        RenderText(screen, 640, 50, "Options", "black", 32, center=True)
 
         #Get the current mouse position
         mouse_pos = pygame.mouse.get_pos()
-        
-        #Update the visual of the easy and hard mode switch
-        easy_mode_button.ChangeColor(mouse_pos)
-        easy_mode_button.Update(screen)
-        
-        hard_mode_button.ChangeColor(mouse_pos)
-        hard_mode_button.Update(screen)
 
-        #Update the visual of the back button
-        options_back.ChangeColor(mouse_pos)
-        options_back.Update(screen)
+        #Update the buttons and switches
+        for button in [easy_mode_button, hard_mode_button, options_back, tutorial_button]:
+            button.ChangeColor(mouse_pos)
+            button.Update(screen)
 
         #Update the visual of the sliders
         for slider in sliders:
@@ -143,8 +140,8 @@ def Options(screen, options_font, difficulty, volume):
             slider.DisplayLabel(screen)
 
         #Render difficulty text and some information
-        RenderText(screen, 640, 400, "Difficulty", "black", 32,center=True)
-        RenderText(screen, 640, 500, "Note: the most rencently clicked button will take priority!", "darkgray", 18,center=True)
+        RenderText(screen, 640, 350, "Difficulty", "black", 32,center=True)
+        RenderText(screen, 640, 450, "Note: the most rencently clicked button will take priority!", "darkgray", 18,center=True)
 
         
         #Event handler
@@ -157,6 +154,7 @@ def Options(screen, options_font, difficulty, volume):
             #Handles mouse input
             if event.type == pygame.MOUSEBUTTONDOWN:
                 
+                #Changes the difficulty
                 if easy_mode_button.CheckForInput(mouse_pos):
                     difficulty = 1
                 if hard_mode_button.CheckForInput(mouse_pos):
@@ -168,6 +166,10 @@ def Options(screen, options_font, difficulty, volume):
                     #Return to the main menu
                     MainMenu(screen, options_font, difficulty, volume)
 
+                if tutorial_button.CheckForInput(mouse_pos):
+                    #Open the tutorial screen
+                    tutorial(screen, volume)
+
 
         #Check if the user is holding down left click
         #and move the button of the slider to the appropriate location
@@ -177,7 +179,6 @@ def Options(screen, options_font, difficulty, volume):
                 if sliders[i].container_rect.collidepoint(mouse_pos):
                         sliders[i].MoveSlider(mouse_pos)
                         volume[i] = sliders[i].GetValue()
-                        print(volume)
 
 
         pygame.display.update()
@@ -261,6 +262,10 @@ def MainGameLogic(level, game_font, difficulty, volume):
     input_box = pygame.Rect(100, 650, 1020, 60)
     inputting = False
 
+    #Input cursor
+    cursor = len(user_input)
+    cursor_blink_timer = 0
+
     #Set up the fire button
     fire_image = pygame.image.load("images\\pixilart-drawing.png")
     fire_image = pygame.transform.scale(fire_image, (60, 60))
@@ -296,36 +301,52 @@ def MainGameLogic(level, game_font, difficulty, volume):
         #Set the background to a specific color
         screen.fill((202,228,241))
 
-        #Display the trajectory of the projectile and initialize the x coordinate
+        #Calculate the coordinates of the trajectory of the projectile
         trajectory = False
         try:
-            x_trajectory = x[:640*(1+difficulty):50]
-            y_trajectory = (-1*eval(user_input)+320)[:640*(1+difficulty):50]
+            x_trajectory = x[:640*(1+difficulty):20]
+            y_trajectory = (-1*eval(user_input)+320)[:640*(1+difficulty):20]
             trajectory = True
         except:
             trajectory = False
 
+        #Draw the trajectory of the projectile
         if attempt and trajectory:
             for dot in range(len(y_trajectory)):
-                pygame.draw.circle(screen, "black", (x_trajectory[dot], y_trajectory[dot]), 8)
-                pygame.draw.circle(screen, "white", (x_trajectory[dot], y_trajectory[dot]), 6)
+                pygame.draw.circle(screen, "black", (x_trajectory[dot], y_trajectory[dot]), 4)
+                pygame.draw.circle(screen, "white", (x_trajectory[dot], y_trajectory[dot]), 2)
 
         #Draw the window border
         for border in [top_rect, bottom_rect, left_rect, right_rect]:
             pygame.draw.rect(screen, "white", border)
 
-        #Render the text box and input text
+        #Changes the color of the input box if the user is typing
         if inputting:
             input_box_color = "green"
         else:
             input_box_color = "black"
 
+        #Render the text box and input text
         pygame.draw.rect(screen, input_box_color, input_box, 2)
-        RenderText(screen=screen, x=input_box.x + 15, y=input_box.y + 5,
-                text=user_input, color="black", size=32)
         RenderText(screen=screen, x=input_box.x - 60, y=input_box.y + 5,
                 text="y =", color="black", size=32)
+        RenderText(screen=screen, x=input_box.x + 15, y=input_box.y + 5,
+                text=user_input[-50:], color="black", size=32)
+        
+        #Update the cursor_rect location
+        cursor_pos = game_font.render(user_input[:cursor], True, "black").get_rect()
+        cursor_rect = pygame.Rect(110 + cursor_pos[2], 660, 3, 40)
 
+        #Draw the cursor blinking
+        if cursor_blink_timer < 300:
+            pygame.draw.rect(screen, "black", cursor_rect)
+            cursor_blink_timer += 1
+        elif cursor_blink_timer >= 300 and cursor_blink_timer < 600:
+            pygame.draw.rect(screen, "lightgray", cursor_rect)
+            cursor_blink_timer += 1
+        else:
+            cursor_blink_timer = 0
+        
         #Update the state of the fire button
         fire_button.Update(screen)
         fire_button.ChangeColor(pygame.mouse.get_pos())
@@ -337,6 +358,7 @@ def MainGameLogic(level, game_font, difficulty, volume):
         target = current_level[0]
         target.UpdateObject(screen)
 
+        #Load the obstacles
         if len(current_level) > 1:
             for obstacle in current_level[1:]:
                 obstacle.UpdateObject(screen)
@@ -361,11 +383,23 @@ def MainGameLogic(level, game_font, difficulty, volume):
 
             #Code to track keyboard input
             if event.type == pygame.KEYDOWN:
+
+                #Adjust the user input arcording to the keys pressed
                 if inputting == True:
                     if event.key == pygame.K_BACKSPACE:
-                        user_input = user_input[:-1]
+                        if cursor != 0:
+                            user_input = user_input = user_input[:cursor-1] + user_input[cursor:]
+                            cursor -= 1
+                    elif event.key == pygame.K_LEFT:
+                        if cursor != 0:
+                            cursor -= 1
+                    elif event.key == pygame.K_RIGHT:
+                        if cursor != len(user_input):
+                            cursor += 1
                     else:
-                        user_input += event.unicode
+                        if event.unicode:
+                            user_input = user_input[:cursor] + event.unicode + user_input[cursor:]
+                            cursor += 1
 
                 #Display the pause if the user pressed the esc key
                 if event.key == pygame.K_ESCAPE:
@@ -374,7 +408,7 @@ def MainGameLogic(level, game_font, difficulty, volume):
                     else:
                         pygame.mixer.music.stop()
                         MainMenu(screen, game_font, difficulty, volume)
-
+            
         #Check if the fire condition is True
         if fire:
             #Set attempt to False to avoid button spamming
@@ -440,7 +474,13 @@ def MainGameLogic(level, game_font, difficulty, volume):
                     pygame.mixer.music.load("sounds\BitMenu.mp3")
                     pygame.mixer.music.set_volume(volume[0])
                     pygame.mixer.music.play(loops=-1, fade_ms=2500)
-                    LevelSelector(screen, base_font, difficulty, volume)
+                    MainMenu(screen, base_font, difficulty, volume)
+                else:
+                    if int(level) == GetNumLevel():
+                        congrats(screen, volume)
+                        MainMenu(screen, game_font, difficulty, volume)
+                    else:
+                        MainGameLogic(str(int(level)+1), game_font, difficulty, volume)
 
         #Set the speed of the game
         clock.tick(20000)

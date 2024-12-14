@@ -29,6 +29,10 @@ level_6 = [Object(1130-12.5, 240-12.5, 25, 25, "red"),
 levels = [level_1, level_2, level_3, level_4, level_5, level_6]
 
 
+def GetNumLevel():
+    return len(levels)
+
+
 #Return the requested level
 def GetLevel(level):
     return levels[int(level) - 1]
