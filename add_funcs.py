@@ -36,14 +36,11 @@ def exp(x, a):
 
 
 #text render function
-def RenderText(screen, x, y, text, color, size, center=False):
+def RenderText(screen, x, y, text, color, size, font,center=False):
+    text_surface = font.render(text, True, color)
     if center:
-        font = pygame.font.Font("Grand9K_Pixel.ttf", size)
-        text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect(center=(x, y))
         screen.blit(text_surface, text_rect)
     else:
-        font = pygame.font.Font("Grand9K_Pixel.ttf", size)
-        text_surface = font.render(text, True, color)
         screen.blit(text_surface, (x, y))
 
