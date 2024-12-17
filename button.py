@@ -3,8 +3,6 @@ import numpy as np
 
 
 pygame.init()
-#Load the font
-base_font = pygame.font.Font("Grand9K_Pixel.ttf", 32)
 
 
 class Button():
@@ -19,7 +17,7 @@ class Button():
         self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
         self.text_input = text_input
         self.text = self.font.render(self.text_input, True, "black")
-        self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+        self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos-5))
 
         self.volume = volume
         self.sfx_1 = pygame.mixer.Sound("sounds/beep_1.wav")
@@ -63,7 +61,7 @@ class Button():
     def ChangeColor(self, position):
         #Change the color of the text when the cursor hovers over the button
         if self.rect.collidepoint(position):
-            self.text = base_font.render(self.text_input, True, "green")
+            self.text = self.font.render(self.text_input, True, "green")
         else:
-            self.text = base_font.render(self.text_input, True, "black")
+            self.text = self.font.render(self.text_input, True, "black")
 

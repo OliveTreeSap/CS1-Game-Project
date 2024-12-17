@@ -7,6 +7,18 @@ from add_funcs import RenderText
 #Set up pygame
 pygame.init()
 
+screen = pygame.display.set_mode((1280, 720))
+
+#Load the button images
+default_button = pygame.image.load("images/buttons/default_button.png").convert_alpha()
+default_button = pygame.transform.scale(default_button, (250, 60))
+
+default_button_short = pygame.image.load("images/buttons/default_button.png").convert_alpha()
+default_button_short = pygame.transform.scale(default_button_short, (200, 60))
+
+square_button = pygame.image.load("images/buttons/square_button.png").convert_alpha()
+square_button = pygame.transform.scale(square_button, (100, 100))
+
 
 def lose_screen(screen, volume, font):
 
@@ -19,11 +31,11 @@ def lose_screen(screen, volume, font):
     lose_screen.center = (640, 360)
 
     #Set up the restart and quit button
-    restart_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640-25, y_pos=360, text_input="R", font=font[2], volume=volume[1])
-    quit_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640+25, y_pos=360, text_input="Q", font=font[2], volume=volume[1])
+    restart_button = Button(image=default_button_short, x_pos=640-125, y_pos=400, text_input="Retry", font=font[2], volume=volume[1])
+    quit_button = Button(image=default_button_short, x_pos=640+125, y_pos=400, text_input="Main Menu", font=font[2], volume=volume[1])
 
     #blur the background
-    blur = pygame.image.load("images\\transparent_background.png").convert_alpha()
+    blur = pygame.image.load("images\\backgrounds\\transparent_background.png").convert_alpha()
     screen.blit(blur, (0, 0))
 
     while run:
@@ -46,8 +58,16 @@ def lose_screen(screen, volume, font):
                     restart = False
                     run = False
 
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    restart = True
+                    run = False
+
         #Display the lose screen
-        pygame.draw.rect(surface=screen, color="red", rect=lose_screen)
+        pygame.draw.rect(surface=screen, color="brown1", rect=lose_screen)
+
+        #Display screen text
+        RenderText(screen, 640, 360-100, "You failed", "Black", font=font[0], center=True)
         
         #Update the restart and quit button
         for button in [restart_button, quit_button]:
@@ -69,12 +89,12 @@ def win_screen(screen, volume, font):
     win_screen.center = (640, 360)
 
     #Set up the return to main menu  and continue to next level buttons
-    home_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=400, text_input="Main menu", font=font[2], volume=volume[1])
+    home_button = Button(image=default_button, x_pos=640-150, y_pos=400, text_input="Main menu", font=font[2], volume=volume[1])
 
-    continue_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=320, text_input="Next level", font=font[2], volume=volume[1])
+    continue_button = Button(image=default_button, x_pos=640+150, y_pos=400, text_input="Next level", font=font[2], volume=volume[1])
 
     #blur the background
-    blur = pygame.image.load("images\\transparent_background.png").convert_alpha()
+    blur = pygame.image.load("images\\backgrounds\\transparent_background.png").convert_alpha()
     screen.blit(blur, (0, 0))
 
     while run:
@@ -98,7 +118,10 @@ def win_screen(screen, volume, font):
                     run = False
 
         #Display the win screen
-        pygame.draw.rect(surface=screen, color="lightgreen", rect=win_screen)
+        pygame.draw.rect(surface=screen, color="chartreuse1", rect=win_screen)
+
+        #Display screen text
+        RenderText(screen, 640, 360-100, "You succeeded", "Black", font=font[0], center=True)
         
         #Update the buttons
         for button in [home_button, continue_button]:
@@ -120,10 +143,10 @@ def incorrect_equation(screen, volume, font):
     incorrect_equation.center = (640, 360)
 
     #Set up the ok button
-    ok_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=360+25, text_input="K", font=font[2], volume=volume[1])
+    ok_button = Button(image=square_button, x_pos=640, y_pos=360+25, text_input="Ok", font=font[2], volume=volume[1])
 
     #blur the background
-    blur = pygame.image.load("images\\transparent_background.png").convert_alpha()
+    blur = pygame.image.load("images\\backgrounds\\transparent_background.png").convert_alpha()
     screen.blit(blur, (0, 0))
 
     while run:
@@ -142,14 +165,14 @@ def incorrect_equation(screen, volume, font):
                     run = False
 
         #Display the correction screen
-        pygame.draw.rect(surface=screen, color="white", rect=incorrect_equation)
+        pygame.draw.rect(surface=screen, color="gold1", rect=incorrect_equation)
         
         #Update the ok button
         ok_button.ChangeColor(mouse_pos)
         ok_button.Update(screen)
 
         #Display text warning the user
-        RenderText(screen, 640, 360-50, "You inputted an incorrect equation", "Black", font=font[2], center=True)
+        RenderText(screen, 640, 360-100, "You've inputted an incorrect equation", "Black", font=font[1], center=True)
 
         #Update the screen
         pygame.display.update()
@@ -166,11 +189,11 @@ def pause_screen(screen, volume, font):
     pause_screen.center = (640, 360)
 
     #Set up the resume and quit button
-    resume_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640-25, y_pos=360, text_input="R", font=font[2], volume=volume[1])
-    quit_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640+25, y_pos=360, text_input="Q", font=font[2], volume=volume[1])
+    resume_button = Button(image=default_button_short, x_pos=640-125, y_pos=400, text_input="Resume", font=font[2], volume=volume[1])
+    quit_button = Button(image=default_button_short, x_pos=640+125, y_pos=400, text_input="Quit", font=font[2], volume=volume[1])
 
     #blur the background
-    blur = pygame.image.load("images\\transparent_background.png").convert_alpha()
+    blur = pygame.image.load("images\\backgrounds\\transparent_background.png").convert_alpha()
     screen.blit(blur, (0, 0))
 
     while run:
@@ -200,7 +223,10 @@ def pause_screen(screen, volume, font):
                     run = False
 
         #Display the pause screen
-        pygame.draw.rect(surface=screen, color="white", rect=pause_screen)
+        pygame.draw.rect(surface=screen, color="aquamarine1", rect=pause_screen)
+
+        #Display screen text
+        RenderText(screen, 640, 360-100, "Game paused", "Black", font=font[0], center=True)
         
         #Update the resume and quit button
         for button in [resume_button, quit_button]:
@@ -222,10 +248,10 @@ def congrats(screen, volume, font):
     congrats.center = (640, 360)
 
     #Set up the ok button
-    ok_button = Button(image=pygame.image.load("images\\pixilart-drawing.png"), x_pos=640, y_pos=360+25, text_input="Ok", font=font[2], volume=volume[1])
+    ok_button = Button(image=square_button, x_pos=640, y_pos=360+25, text_input="Ok", font=font[2], volume=volume[1])
 
     #blur the background
-    blur = pygame.image.load("images\\transparent_background.png").convert_alpha()
+    blur = pygame.image.load("images\\backgrounds\\transparent_background.png").convert_alpha()
     screen.blit(blur, (0, 0))
 
     while run:
@@ -251,7 +277,7 @@ def congrats(screen, volume, font):
         ok_button.Update(screen)
 
         #Display text warning the user
-        RenderText(screen, 640, 360-50, "Congratulations, you've beaten the game!", "Black", font=font[2], center=True)
+        RenderText(screen, 640, 360-100, "Congratulations, you've beaten the game!", "Black", font=font[2], center=True)
 
         #Update the screen
         pygame.display.update()
@@ -268,10 +294,13 @@ def tutorial(screen, volume, font):
     #Current y position
     y = 25
 
+    default_button_short = pygame.image.load("images/buttons/default_button.png").convert_alpha()
+    default_button_short = pygame.transform.scale(default_button_short, (200, 60))
+
     while run:
 
         #Initialize the back button
-        back_button = Button(image=pygame.image.load("images\\pixilart-drawing.png").convert(), x_pos=620, y_pos=-y+1350, text_input="Back", font=font[2], volume=volume[1])
+        back_button = Button(image=default_button_short, x_pos=620, y_pos=-y+1350, text_input="Back", font=font[2], volume=volume[1])
 
         #Get mouse position
         mouse_pos = pygame.mouse.get_pos()

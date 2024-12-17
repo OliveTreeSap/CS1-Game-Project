@@ -10,13 +10,14 @@ class Object():
     
 
     #Initialize the obstacle or target and its properties
-    def __init__(self, x, y, width, height, color, moving=False, speed_x=None, distance_x=None, speed_y=None, distance_y=None):
+    def __init__(self, x, y, width, height, color, image, moving=False, speed_x=None, distance_x=None, speed_y=None, distance_y=None):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.color = color
         self.moving = moving
+        self.image = image
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
 
         if self.moving:
@@ -36,10 +37,18 @@ class Object():
             self.new_y = self.distance_y*np.sin(self.speed_y*self.loop) + self.y
             self.rect = pygame.Rect(self.new_x, self.new_y, self.width, self.height)
             self.rect.center = (self.new_x, self.new_y)
-            pygame.draw.rect(screen, self.color, self.rect)
+            # pygame.draw.rect(screen, self.color, self.rect)
+            self.image = pygame.transform.scale(self.image, (self.width, self.height))
+            image_rect = self.image.get_rect()
+            image_rect.center = (self.new_x, self.new_y)
+            screen.blit(self.image, image_rect)
             self.loop += 1
         else:
-            pygame.draw.rect(screen, self.color, self.rect)
+            # pygame.draw.rect(screen, self.color, self.rect)
+            self.image = pygame.transform.scale(self.image, (self.width, self.height))
+            image_rect = self.image.get_rect()
+            image_rect.x, image_rect.y = self.x, self.y
+            screen.blit(self.image, image_rect)
 
 
     #Check if the projectile have collided with the obstacle

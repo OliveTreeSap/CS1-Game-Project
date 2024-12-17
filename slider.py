@@ -48,9 +48,9 @@ class Slider():
 
     #Display the label of the slider
     def DisplayLabel(self, screen):
-        RenderText(screen, self.container_rect.centerx, self.top_pos-35, self.label, "black", self.label_font, center=True)
+        RenderText(screen, self.container_rect.centerx, self.top_pos-20, self.label, "black", self.label_font, center=True)
     
 
     #Display the value next to the slider
     def DisplayValue(self, screen):
-        RenderText(screen, self.left_pos + self.size[0] + 50, self.container_rect.centery, "{:.2f}".format(self.GetValue()), "black", self.value_font, center=True)
+        RenderText(screen, self.left_pos + self.size[0] + 25, self.container_rect.centery, "{:.2f}".format(self.GetValue()), "black", self.value_font, center=True)
